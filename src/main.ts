@@ -41,3 +41,9 @@ bootstrap();
 //! git commit -a "fix: CRUD funcional con base de datos y configuracion de SWAGGER"
 
 //! git commit -a "fix: Uso de prisma y correccion de CRUD (Task)"
+
+//? BYCRIPT
+//! npm i bcrypt
+//! npm i @types/bcrypt -D
+
+//! git commit -a "fix: CRUD de usuarios y creacion de rutas para la autenticacion"
