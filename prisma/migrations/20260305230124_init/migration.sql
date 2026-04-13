@@ -5,8 +5,10 @@ CREATE TABLE `User` (
     `lastName` VARCHAR(300) NOT NULL,
     `username` VARCHAR(100) NOT NULL,
     `password` LONGTEXT NOT NULL,
+    `refreshToken` LONGTEXT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    UNIQUE INDEX `User_username_key`(`username`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

@@ -18,7 +18,7 @@ model User {
   id           Int      @id @default(autoincrement())
   name         String   @db.VarChar(200)
   lastName     String   @db.VarChar(300)
-  username     String   @db.VarChar(100)
+  username     String   @db.VarChar(100) @unique
   password     String   @db.LongText
   refreshToken String?  @db.LongText
   createdAt    DateTime @default(now())

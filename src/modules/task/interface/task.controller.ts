@@ -9,12 +9,15 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto, UpdateTaskDto } from '../dto/create-task.dto';
 import { Task } from '../entities/task.entity';
+import { AuthGuard } from 'src/common/guards/auth.guards';
 
 @Controller('/api/task')
+@UseGuards(AuthGuard)
 export class TaskController {
   constructor(private tasksvc: TaskService) {}
 
@@ -40,7 +43,7 @@ export class TaskController {
 
   @Post('')
   public async insertTask(@Body() task: CreateTaskDto): Promise<Task> {
-    const result = this.tasksvc.InsertTask(task);
+    const result = await this.tasksvc.InsertTask(task);
     if (result == undefined || result == null) {
       throw new HttpException(
         `Error al insertar la tarea`,

@@ -9,13 +9,16 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '../dto/create-user.dto';
 import { User } from '../entities/user.entity';
 import { UtilService } from 'src/common/services/util.service';
+import { AuthGuard } from 'src/common/guards/auth.guards';
 
 @Controller('/api/user')
+@UseGuards(AuthGuard)
 export class UserController {
   constructor(
     private usersvc: UserService,
