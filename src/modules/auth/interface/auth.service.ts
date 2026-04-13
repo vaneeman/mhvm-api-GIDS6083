@@ -1,85 +1,29 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable } from '@nestjs/common';
+import { User } from 'generated/prisma/browser';
 import { PrismaService } from 'src/common/services/prisma.service';
-import { UtilService } from 'src/common/services/util.service';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private prisma: PrismaService,
-    private utilService: UtilService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async register(name: string, lastName: string, username: string, password: string) {
-    const hashedPassword = await this.utilService.hashPassword(password);
-
-    const user = await this.prisma.user.create({
-      data: {
-        name,
-        lastName,
-        username,
-        password: hashedPassword,
-      },
-    });
-
-    const payload = {
-      sub: user.id,
-      username: user.username,
-      name: user.name,
-      lastName: user.lastName,
-    };
-
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '60s' });
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-
-    await this.prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken },
-    });
-
-    return {
-      accessToken,
-      refreshToken,
-    };
+  public async getUserByUsername(username: string): Promise<User | null> {
+    return await this.prisma.user.findFirst({ where: { username } });
   }
 
-  async login(username: string, password: string) {
-    const user = await this.prisma.user.findFirst({
-      where: { username },
+  public async getUserById(id: number): Promise<User | null> {
+    return await this.prisma.user.findFirst({ where: { id } });
+  }
+
+  public async updateHash(userId: number, hash: string | null): Promise<User> {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: { hash },
     });
+  }
 
-    if (!user) {
-      throw new UnauthorizedException('Credenciales inválidas');
-    }
-
-    const isPasswordValid = await this.utilService.checkPassword(
-      password,
-      user.password,
-    );
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Credenciales inválidas');
-    }
-
-    const payload = {
-      sub: user.id,
-      username: user.username,
-      name: user.name,
-      lastName: user.lastName,
-    };
-
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '60s' });
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-
-    await this.prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken },
+  async register(name: string, lastName: string, username: string, hashedPassword: string): Promise<User> {
+    return await this.prisma.user.create({
+      data: { name, lastName, username, password: hashedPassword },
     });
-
-    return {
-      accessToken,
-      refreshToken,
-    };
   }
 }

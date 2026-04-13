@@ -11,6 +11,10 @@ export class UtilService {
         return await bcrypt.hash(password, 10);
     }
 
+    public async hash(data: string) {
+        return await bcrypt.hash(data, 10);
+    }
+
     public async checkPassword(password: string, encryptedPassword: string) {
         return await bcrypt.compare(password, encryptedPassword);
     }

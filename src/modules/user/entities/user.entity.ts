@@ -5,8 +5,8 @@ export class User {
   name: string;
   lastName: string;
   username: string;
-  password: string;
+  password?: string;
+  hash?: string | null | undefined;
   createdAt: Date;
-  task?: Task[];
 }
 
