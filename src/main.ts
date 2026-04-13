@@ -39,3 +39,5 @@ bootstrap();
 //! npm install @nestjs/swagger
 
 //! git commit -a "fix: CRUD funcional con base de datos y configuracion de SWAGGER"
+
+//! git commit -a "fix: Uso de prisma y correccion de CRUD (Task)"
