@@ -2,6 +2,7 @@ import {
   IsBoolean,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -27,4 +28,22 @@ export class CreateTaskDto {
   @IsNotEmpty()
   @IsInt()
   user_id: number;
+}
+
+export class UpdateTaskDto {
+  @IsOptional()
+  @IsString( {message: "El nombre debe ser una cadena de texto"} )
+  @MinLength(3)
+  @MaxLength(100)
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(5)
+  @MaxLength(250)
+  description?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  priority: boolean;
 }
