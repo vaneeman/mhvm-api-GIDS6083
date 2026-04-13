@@ -80,4 +80,17 @@ export class AuthController {
   public async logout(@Req() req: any) {
     await this.authSvc.updateHash(req['user'].sub, null);
   }
+
+  @Post('/reset-password')
+  @HttpCode(HttpStatus.OK)
+  public async resetPassword(
+    @Body('username') username: string,
+    @Body('newPassword') newPassword: string,
+  ) {
+    const user = await this.authSvc.getUserByUsername(username);
+    if (!user) throw new UnauthorizedException('Usuario no encontrado');
+    const hashed = await this.utilSvc.hashPassword(newPassword);
+    await this.authSvc.updatePassword(user.id, hashed);
+    return { message: 'Contraseña actualizada correctamente' };
+  }
 }

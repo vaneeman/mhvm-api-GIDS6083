@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
@@ -22,8 +23,8 @@ export class TaskController {
   constructor(private tasksvc: TaskService) {}
 
   @Get('')
-  async getAllTasks(): Promise<Task[]> {
-    return await this.tasksvc.getAllTasks();
+  async getAllTasks(@Req() req: any): Promise<Task[]> {
+    return await this.tasksvc.getTasksByUser(req['user'].sub);
   }
 
   @Get(':id')

@@ -12,10 +12,14 @@ export class TaskService {
   ) {}
 
   public async getAllTasks(): Promise<Task[]> {
-    const tasks = await this.prisma.task.findMany({
+    return await this.prisma.task.findMany({ orderBy: [{ name: 'asc' }] });
+  }
+
+  public async getTasksByUser(userId: number): Promise<Task[]> {
+    return await this.prisma.task.findMany({
+      where: { user_id: userId },
       orderBy: [{ name: 'asc' }],
     });
-    return tasks;
   }
 
   public async getTaskById(id: number): Promise<Task | null> {

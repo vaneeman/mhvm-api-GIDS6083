@@ -21,6 +21,13 @@ export class AuthService {
     });
   }
 
+  public async updatePassword(userId: number, hashedPassword: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword, hash: null },
+    });
+  }
+
   async register(name: string, lastName: string, username: string, hashedPassword: string): Promise<User> {
     return await this.prisma.user.create({
       data: { name, lastName, username, password: hashedPassword },
