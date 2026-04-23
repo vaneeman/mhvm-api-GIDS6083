@@ -3,11 +3,11 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
+import { SanitizePipe } from './common/pipes/sanitize.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Habilitar CORS para el frontend React
   app.enableCors({
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -15,22 +15,22 @@ async function bootstrap() {
     credentials: true,
   });
 
-  //Uso de pipes de forma global
+  // ✅ Sanitización XSS global
   app.useGlobalPipes(
+    new SanitizePipe(),
     new ValidationPipe({
-      whitelist: true, // Elimina propiedades no definidas en el DTO
+      whitelist: true,
     }),
   );
 
-  // uso de filtros de forma global
+  // ✅ Filtro global de errores sin exponer stack traces
   app.useGlobalFilters(new AllExceptionsFilter());
 
-
-  //Configuracion de swagger
   const config = new DocumentBuilder()
     .setTitle('API con vulnerabilidades de seguridad')
     .setDescription('Documentacion de la API para pruebas.')
     .setVersion('1.0.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -39,28 +39,3 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
-
-//? MYSQL
-//!npm i mysql2
-//!npm i @types/mysql2 -D
-
-//? POSTGRESQL
-//!npm i pg
-//!npm i @types/pg -D
-
-//? Install SWAGGER
-//! npm install @nestjs/swagger
-
-//! git commit -a "fix: CRUD funcional con base de datos y configuracion de SWAGGER"
-
-//! git commit -a "fix: Uso de prisma y correccion de CRUD (Task)"
-
-//? BYCRIPT
-//! npm i bcrypt
-//! npm i @types/bcrypt -D
-
-//! git commit -a "fix: CRUD de usuarios y creacion de rutas para la autenticacion"
-
-
-//No eliminar usuario en sesion
-// guardar los logs
