@@ -39,6 +39,18 @@ export class UserController {
     return await this.usersvc.getAllUsers();
   }
 
+  @Get('check-username/:username')
+public async checkUsername(
+  @Param('username') username: string,
+): Promise<{ available: boolean }> {
+  // Validación básica para evitar consultas con basura
+  if (!username || username.length < 3 || username.length > 100) {
+    return { available: false };
+  }
+  const user = await this.usersvc.getUserByUsername(username);
+  return { available: !user };
+}
+
   @Get(':id')
   public async listUserById(
     @Param('id', ParseIntPipe) id: number,

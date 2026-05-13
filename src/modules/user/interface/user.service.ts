@@ -33,6 +33,13 @@ export class UserService {
     return user;
   }
 
+  public async getUserByUsername(username: string): Promise<{ id: number } | null> {
+  return await this.prisma.user.findFirst({
+    where: { username },
+    select: { id: true },
+  });
+}
+
   public async InsertUser(user: CreateUserDto): Promise<User> {
     const newUser = await this.prisma.user.create({
       data: user,
